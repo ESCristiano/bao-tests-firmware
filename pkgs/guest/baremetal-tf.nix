@@ -3,6 +3,7 @@
 , toolchain
 , python3
 , python3Packages
+, rsync
 }:
 
 stdenv.mkDerivation rec {
@@ -13,13 +14,12 @@ stdenv.mkDerivation rec {
     src = ../../../.;
 
     nativeBuildInputs = [ toolchain]; #build time dependencies
-    buildInputs = [python3 python3Packages.numpy];
+    buildInputs = [python3 python3Packages.numpy rsync];
 
     unpackPhase = ''
         mkdir -p $out
-        cp -r $src/* $out
         #copy everything except bao-tests-firmware
-        # rsync -r --exclude 'bao-tests-firmware' $src/ $out 
+        rsync -r --exclude 'bao-tests-firmware' $src/ $out 
         cd $out
     '';
 
