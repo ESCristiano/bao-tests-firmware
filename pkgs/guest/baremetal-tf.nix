@@ -1,6 +1,8 @@
 { stdenv
 , fetchFromGitHub
 , toolchain
+, python3
+, python3Packages
 }:
 
 stdenv.mkDerivation rec {
@@ -11,7 +13,7 @@ stdenv.mkDerivation rec {
     src = ../../../.;
 
     nativeBuildInputs = [ toolchain]; #build time dependencies
-
+    buildInputs = [python3 python3Packages.numpy];
 
     unpackPhase = ''
         mkdir -p $out
@@ -24,7 +26,10 @@ stdenv.mkDerivation rec {
     buildPhase = ''
         export ARCH=aarch64
         export CROSS_COMPILE=aarch64-none-elf-
-        #python3 ./codegen.py -dir ./tests -o ./bao-tests/src/bao_tests.c
+        export TESTF_TESTS_DIR=$out/tests
+        export TESTF_REPO_DIR=$out/bao-tests
+        chmod -R u+w bao-tests #make sure we can write to bao-tests
+        python3 codegen.py -dir $TESTF_TESTS_DIR -o $TESTF_REPO_DIR/src/testf_entry.c
         make PLATFORM=$platform BAO_TEST=1 SUITES=ABCD
     '';
     
@@ -32,7 +37,7 @@ stdenv.mkDerivation rec {
         mkdir -p $out/bin
         cp ./build/qemu-aarch64-virt/baremetal.bin $out/bin
     '';
-
+    
 }
 
 
