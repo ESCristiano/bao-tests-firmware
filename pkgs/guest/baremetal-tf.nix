@@ -4,12 +4,14 @@
 , python3
 , python3Packages
 , rsync
+, plat
+, list_tests
+, list_suites
 }:
 
 stdenv.mkDerivation rec {
     pname = "baremetal-tf";
     version = "1.0.0";
-    platform = "qemu-aarch64-virt";
 
     src = ../../../.;
 
@@ -24,13 +26,16 @@ stdenv.mkDerivation rec {
     '';
 
     buildPhase = ''
+        echo "Platform: ${plat}"
+        echo "Suites: ${list_suites}"
+        echo "Testes: ${list_tests}"
         export ARCH=aarch64
         export CROSS_COMPILE=aarch64-none-elf-
         export TESTF_TESTS_DIR=$out/tests
         export TESTF_REPO_DIR=$out/bao-tests
         chmod -R u+w bao-tests #make sure we can write to bao-tests
         python3 codegen.py -dir $TESTF_TESTS_DIR -o $TESTF_REPO_DIR/src/testf_entry.c
-        make PLATFORM=$platform BAO_TEST=1 SUITES=ABCD
+        make PLATFORM=${plat} BAO_TEST=1 SUITES=${list_suites} TESTS=${list_tests}
     '';
     
     installPhase = ''
@@ -39,5 +44,3 @@ stdenv.mkDerivation rec {
     '';
     
 }
-
-
