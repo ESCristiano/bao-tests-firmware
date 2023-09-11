@@ -24,6 +24,8 @@ stdenv.mkDerivation rec {
         make qemu_arm64_defconfig
         echo "CONFIG_TFABOOT=y" >> .config
         echo "CONFIG_SYS_TEXT_BASE=0x60000000" >> .config
+        echo "CONFIG_BOOTDELAY=0" >> ./.config 
+        echo "CONFIG_BOOTCOMMAND=\"go 0x50000000\"" >> .config
         make
     '';
     
