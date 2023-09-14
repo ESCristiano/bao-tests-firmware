@@ -4,7 +4,7 @@
 , python3
 , python3Packages
 , rsync
-, plat
+, platform
 , list_tests
 , list_suites
 }:
