@@ -26,7 +26,7 @@ stdenv.mkDerivation rec {
         export CROSS_COMPILE=aarch64-none-elf-
         export DEMO=baremetal
         mkdir -p ./config
-        cp -L ${demos}/$DEMO/configs/$platform.c \
+        cp -L ${demos}/demos/$DEMO/configs/$platform.c \
                 ./config/$DEMO.c
         mkdir -p ./$DEMO
         cp -L ${guest}/bin/baremetal.bin ./$DEMO

@@ -9,7 +9,6 @@ with pkgs;
 
 let
   packages = rec {
-    # conf = callPackage ./pkgs/config/config.nix { };
     aarch64-none-elf = callPackage ./pkgs/toolchains/aarch64-none-elf-11-3.nix {};
     demos = callPackage ./pkgs/demos/demos.nix {};
     baremetal = callPackage ./pkgs/guest/baremetal-guest.nix {toolchain = aarch64-none-elf; };
