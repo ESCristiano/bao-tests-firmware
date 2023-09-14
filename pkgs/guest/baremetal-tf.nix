@@ -26,7 +26,7 @@ stdenv.mkDerivation rec {
     '';
 
     buildPhase = ''
-        echo "Platform: ${plat}"
+        echo "Platform: ${platform}"
         echo "Suites: ${list_suites}"
         echo "Testes: ${list_tests}"
         export ARCH=aarch64
