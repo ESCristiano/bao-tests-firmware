@@ -3,12 +3,12 @@
 , toolchain
 , u-boot
 , openssl
+, platform
 }:
 
 stdenv.mkDerivation rec {
     pname = "atf";
     version = "bao/demo";
-    platform = "qemu-aarch64-virt";
 
     src = fetchFromGitHub {
         owner = "bao-project";
@@ -26,14 +26,12 @@ stdenv.mkDerivation rec {
     '';
     
     installPhase = ''
-        mkdir -p $out/bin/$platform
+        mkdir -p $out/bin/${platform}
         dd if=./build/qemu/release/bl1.bin\
-           of=$out/bin/$platform/flash.bin
+           of=$out/bin/${platform}/flash.bin
         dd if=./build/qemu/release/fip.bin\
-           of=$out/bin/$platform/flash.bin seek=64 bs=4096 conv=notrunc
-        # mkdir -p $out/bin
-        # cp -r * $out
-        # cp ./build/zynqmp/release/bl31/bl31.elf $out/bin/
+           of=$out/bin/${platform}/flash.bin seek=64 bs=4096 conv=notrunc
+
     '';
 
 }

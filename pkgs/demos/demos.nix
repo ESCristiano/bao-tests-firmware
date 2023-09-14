@@ -13,12 +13,13 @@ stdenv.mkDerivation rec {
         sha256 = "sha256-+1cqnfQ80rX5VQa0/UOBZVbyrFL8YSDHebtKRapo7+w=";
     };
 
+    dontBuild = true;
+    
     installPhase = ''
         mkdir -p $out
         cp -r $src/* $out
     '';
 
-    dontBuild = true;
 }
 
 

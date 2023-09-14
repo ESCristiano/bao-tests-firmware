@@ -4,13 +4,12 @@
 , toolchain
 , guest
 , demos
+, platform
 }:
 
 stdenv.mkDerivation rec {
     pname = "bao";
     version = "1.0.0";
-    platform = "qemu-aarch64-virt";
-
 
     srcs = fetchFromGitHub {
         owner = "bao-project";
@@ -26,11 +25,11 @@ stdenv.mkDerivation rec {
         export CROSS_COMPILE=aarch64-none-elf-
         export DEMO=baremetal
         mkdir -p ./config
-        cp -L ${demos}/demos/$DEMO/configs/$platform.c \
+        cp -L ${demos}/demos/$DEMO/configs/${platform}.c \
                 ./config/$DEMO.c
         mkdir -p ./$DEMO
         cp -L ${guest}/bin/baremetal.bin ./$DEMO
-        make PLATFORM=$platform\
+        make PLATFORM=${platform}\
              CONFIG_REPO=./config\
              CONFIG=$DEMO\
              CPPFLAGS=-DBAO_DEMOS_WRKDIR_IMGS=./$DEMO
@@ -38,7 +37,7 @@ stdenv.mkDerivation rec {
     
     installPhase = ''
         mkdir -p $out/bin
-        cp ./bin/$platform/$DEMO/bao.bin $out/bin
+        cp ./bin/${platform}/$DEMO/bao.bin $out/bin
     '';
 
 }

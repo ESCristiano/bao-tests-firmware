@@ -1,12 +1,12 @@
 { stdenv
 , fetchFromGitHub
 , toolchain
+, platform
 }:
 
 stdenv.mkDerivation rec {
     pname = "baremetal-guest";
     version = "1.0.0";
-    platform = "qemu-aarch64-virt";
 
     src = fetchFromGitHub {
         owner = "bao-project";
@@ -20,12 +20,12 @@ stdenv.mkDerivation rec {
     buildPhase = ''
         export ARCH=aarch64
         export CROSS_COMPILE=aarch64-none-elf-
-        make PLATFORM=$platform
+        make PLATFORM=${platform}
     '';
     
     installPhase = ''
         mkdir -p $out/bin
-        cp ./build/qemu-aarch64-virt/baremetal.bin $out/bin
+        cp ./build/${platform}/baremetal.bin $out/bin
     '';
 
 }

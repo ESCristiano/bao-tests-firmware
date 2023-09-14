@@ -9,14 +9,36 @@ with pkgs;
 
 let
   packages = rec {
-    aarch64-none-elf = callPackage ./pkgs/toolchains/aarch64-none-elf-11-3.nix {};
+    platform = "qemu-aarch64-virt";
+    aarch64-none-elf = callPackage ./pkgs/toolchains/aarch64-none-elf-11-3.nix{};
     demos = callPackage ./pkgs/demos/demos.nix {};
-    baremetal = callPackage ./pkgs/guest/baremetal-guest.nix {toolchain = aarch64-none-elf; };
-    bao = callPackage ./pkgs/bao/bao.nix { toolchain = aarch64-none-elf; guest = baremetal; inherit demos;};
-    u-boot = callPackage ./pkgs/u-boot/u-boot.nix { toolchain = aarch64-none-elf; };
-    atf = callPackage ./pkgs/atf/atf.nix { toolchain = aarch64-none-elf; inherit u-boot; };
+    baremetal = callPackage ./pkgs/guest/baremetal-guest.nix 
+                {
+                  toolchain = aarch64-none-elf; 
+                  inherit platform;
+                };
 
-    inherit pkgs; # similar to `pkgs = pkgs;` This lets callers use the nixpkgs version defined in this file.
+    bao = callPackage ./pkgs/bao/bao.nix 
+                { 
+                  toolchain = aarch64-none-elf; 
+                  guest = baremetal; 
+                  inherit demos; 
+                  inherit platform;
+                };
+
+    u-boot = callPackage ./pkgs/u-boot/u-boot.nix 
+                { 
+                  toolchain = aarch64-none-elf; 
+                };
+
+    atf = callPackage ./pkgs/atf/atf.nix 
+                { 
+                  toolchain = aarch64-none-elf; 
+                  inherit u-boot; 
+                  inherit platform;
+                };
+
+    inherit pkgs;
   };
 in
   packages
