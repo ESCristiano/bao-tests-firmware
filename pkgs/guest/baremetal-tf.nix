@@ -40,7 +40,7 @@ stdenv.mkDerivation rec {
     
     installPhase = ''
         mkdir -p $out/bin
-        cp ./build/qemu-aarch64-virt/baremetal.bin $out/bin
+        cp ./build/${platform}/baremetal.bin $out/bin
     '';
     
 }
