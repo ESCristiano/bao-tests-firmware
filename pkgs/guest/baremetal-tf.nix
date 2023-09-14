@@ -7,21 +7,25 @@
 , platform
 , list_tests
 , list_suites
+, bao-tests
+, tests
 }:
 
 stdenv.mkDerivation rec {
     pname = "baremetal-tf";
     version = "1.0.0";
 
-    src = ../../../.;
+    src = ../../../../.;
 
     nativeBuildInputs = [ toolchain]; #build time dependencies
     buildInputs = [python3 python3Packages.numpy rsync];
 
     unpackPhase = ''
         mkdir -p $out
-        #copy everything except bao-tests-firmware
-        rsync -r --exclude 'bao-tests-firmware' $src/ $out 
+        #copy everything except tests
+        rsync -r --exclude 'tests' $src/ $out 
+        cp -r ${bao-tests} $out/bao-tests
+        cp -r ${tests} $out/tests
         cd $out
     '';
 
@@ -34,7 +38,9 @@ stdenv.mkDerivation rec {
         export TESTF_TESTS_DIR=$out/tests
         export TESTF_REPO_DIR=$out/bao-tests
         chmod -R u+w bao-tests #make sure we can write to bao-tests
-        python3 codegen.py -dir $TESTF_TESTS_DIR -o $TESTF_REPO_DIR/src/testf_entry.c
+        cd bao-tests
+        python3 ./codegen.py -d $TESTF_TESTS_DIR -o $TESTF_REPO_DIR/src/testf_entry.c
+        cd ..
         make PLATFORM=${platform} BAO_TEST=1 SUITES=${list_suites} TESTS=${list_tests}
     '';
     

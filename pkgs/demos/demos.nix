@@ -4,7 +4,7 @@
 
 stdenv.mkDerivation rec {
     pname = "demos";
-    version = "1.0.1";
+    version = "1.0.0";
 
     src = fetchFromGitHub {
         owner = "bao-project";
