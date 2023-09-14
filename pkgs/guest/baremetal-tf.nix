@@ -35,7 +35,7 @@ stdenv.mkDerivation rec {
         export TESTF_REPO_DIR=$out/bao-tests
         chmod -R u+w bao-tests #make sure we can write to bao-tests
         python3 codegen.py -dir $TESTF_TESTS_DIR -o $TESTF_REPO_DIR/src/testf_entry.c
-        make PLATFORM=${plat} BAO_TEST=1 SUITES=${list_suites} TESTS=${list_tests}
+        make PLATFORM=${platform} BAO_TEST=1 SUITES=${list_suites} TESTS=${list_tests}
     '';
     
     installPhase = ''
