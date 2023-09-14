@@ -5,7 +5,7 @@
   }) {},
   platform ? " ",
   tests ? " ",
-  suites ? " "
+  list_tests ? " "
 }:
 
 with pkgs;
