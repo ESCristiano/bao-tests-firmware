@@ -15,7 +15,7 @@ let
     # conf = callPackage ./pkgs/config/config.nix { };
     aarch64-none-elf = callPackage ./pkgs/toolchains/aarch64-none-elf-11-3.nix {};
     demos = callPackage ./pkgs/demos/demos.nix {};
-    baremetal = callPackage ./pkgs/guest/baremetal-tf.nix {toolchain = aarch64-none-elf; plat = platform; list_tests = tests; list_suites = suites; };
+    baremetal = callPackage ./pkgs/guest/baremetal-tf.nix {toolchain = aarch64-none-elf; inherit platform; inherit list_tests; inherit list_suites; };
     bao = callPackage ./pkgs/bao/bao.nix { toolchain = aarch64-none-elf; guest = baremetal; inherit demos;};
     u-boot = callPackage ./pkgs/u-boot/u-boot.nix { toolchain = aarch64-none-elf; };
     atf = callPackage ./pkgs/atf/atf.nix { toolchain = aarch64-none-elf; inherit u-boot; };
