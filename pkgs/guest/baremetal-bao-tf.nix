@@ -13,11 +13,18 @@
 
 stdenv.mkDerivation rec {
     # Derivation to build the baremetal-guest to run the bao test framework
-    # MUT: baremetal-guest
-    pname = "baremetal-tf";
+    # MUT: bao-hypervisor
+    pname = "baremetal-bao-tf";
     version = "1.0.0";
 
-    src = ../../../../.;
+     src = fetchFromGitHub {
+        owner = "bao-project";
+        repo = "bao-baremetal-guest";
+        rev = "4010db4ba5f71bae72d4ceaf4efa3219812c6b12"; # branch demo
+        sha256 = "sha256-aiKraDtjv+n/cXtdYdNDKlbzOiBxYTDrMT8bdG9B9vU=";
+    };
+    
+    patch = ../../../baremetal.patch;
 
     nativeBuildInputs = [ toolchain]; #build time dependencies
     buildInputs = [python3 python3Packages.numpy rsync];
@@ -25,11 +32,16 @@ stdenv.mkDerivation rec {
     unpackPhase = ''
         mkdir -p $out
         #copy everything except tests
-        rsync -r --exclude 'tests' $src/ $out 
+        rsync -r $src/ $out 
         cp -r ${bao-tests} $out/bao-tests
         cp -r ${tests} $out/tests
+        chmod -R u+w $out #make sure we can write to src to apply patches
         cd $out
     '';
+
+    patches = [
+         "${patch}"
+    ];
 
     buildPhase = ''
         echo "Platform: ${platform}"
